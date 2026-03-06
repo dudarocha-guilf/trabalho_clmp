@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>AlmaFisio - Sistema</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:0;
+background:#f4f9fc;
+}
+
+/* HEADER */
+
+header{
+background:white;
+padding:20px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+header img{
+height:60px;
+}
+
+nav button{
+margin-left:10px;
+padding:10px 20px;
+border:none;
+background:#5ab0d8;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+nav button:hover{
+background:#409cc7;
+}
+
+/* CONTAINER */
+
+.container{
+padding:40px;
+max-width:1000px;
+margin:auto;
+}
+
+/* FORM */
+
+form{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+max-width:400px;
+margin:auto;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+padding:10px 20px;
+background:#5ab0d8;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#409cc7;
+}
+
+/* SERVIÇOS */
+
+.servicos{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card h3{
+color:#5ab0d8;
+}
+
+/* TABELA */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+th{
+background:#5ab0d8;
+color:white;
+}
+
+.hidden{
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<img src="AlmaFisio.png">
+
+<nav>
+<button onclick="mostrar('login')">Login</button>
+<button onclick="mostrar('cadastro')">Cadastro</button>
+<button onclick="mostrar('servicos')">Serviços</button>
+<button onclick="mostrar('agenda')">Agendar</button>
+<button onclick="mostrar('meus')">Meus Agendamentos</button>
+<button onclick="mostrar('admin')">Admin</button>
+</nav>
+
+</header>
+
+<div class="container">
+
+<!-- LOGIN -->
+
+<div id="login">
+
+<form>
+
+<h2>Login</h2>
+
+<input type="email" placeholder="Email">
+
+<input type="password" placeholder="Senha">
+
+<button>Entrar</button>
+
+</form>
+
+</div>
+
+
+<!-- CADASTRO -->
+
+<div id="cadastro" class="hidden">
+
+<form>
+
+<h2>Criar Conta</h2>
+
+<input placeholder="Nome">
+
+<input placeholder="Email">
+
+<input type="password" placeholder="Senha">
+
+<input type="password" placeholder="Confirmar Senha">
+
+<button>Cadastrar</button>
+
+</form>
+
+</div>
+
+
+<!-- SERVIÇOS -->
+
+<div id="servicos" class="hidden">
+
+<h2>Serviços</h2>
+
+<div class="servicos">
+
+<div class="card">
+<h3>Fisioterapia</h3>
+<p>Duração: 60 min</p>
+<p>Preço: R$120</p>
+<button onclick="mostrar('agenda')">Agendar</button>
+</div>
+
+<div class="card">
+<h3>Massagem Terapêutica</h3>
+<p>Duração: 45 min</p>
+<p>Preço: R$90</p>
+<button onclick="mostrar('agenda')">Agendar</button>
+</div>
+
+<div class="card">
+<h3>Reabilitação Esportiva</h3>
+<p>Duração: 60 min</p>
+<p>Preço: R$150</p>
+<button onclick="mostrar('agenda')">Agendar</button>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- AGENDAMENTO -->
+
+<div id="agenda" class="hidden">
+
+<h2>Agendar Horário</h2>
+
+<form>
+
+<select>
+<option>Fisioterapia</option>
+<option>Massagem Terapêutica</option>
+<option>Reabilitação Esportiva</option>
+</select>
+
+<input type="date">
+
+<select>
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>14:00</option>
+<option>15:00</option>
+</select>
+
+<button>Confirmar Agendamento</button>
+
+</form>
+
+</div>
+
+
+<!-- MEUS AGENDAMENTOS -->
+
+<div id="meus" class="hidden">
+
+<h2>Meus Agendamentos</h2>
+
+<table>
+
+<tr>
+<th>Serviço</th>
+<th>Data</th>
+<th>Horário</th>
+<th>Status</th>
+<th>Ações</th>
+</tr>
+
+<tr>
+<td>Fisioterapia</td>
+<td>12/03</td>
+<td>10:00</td>
+<td>Pendente</td>
+<td>
+<button>Alterar</button>
+<button>Cancelar</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- ADMIN -->
+
+<div id="admin" class="hidden">
+
+<h2>Painel Administrativo</h2>
+
+<input type="date">
+
+<table>
+
+<tr>
+<th>Cliente</th>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+<th>Ações</th>
+</tr>
+
+<tr>
+<td>Maria</td>
+<td>Fisioterapia</td>
+<td>12/03</td>
+<td>10:00</td>
+<td>Pendente</td>
+<td>
+<button>Confirmar</button>
+<button>Cancelar</button>
+</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+
+<script>
+
+function mostrar(tela){
+
+document.getElementById("login").classList.add("hidden")
+document.getElementById("cadastro").classList.add("hidden")
+document.getElementById("servicos").classList.add("hidden")
+document.getElementById("agenda").classList.add("hidden")
+document.getElementById("meus").classList.add("hidden")
+document.getElementById("admin").classList.add("hidden")
+
+document.getElementById(tela).classList.remove("hidden")
+
+}
+
+</script>
+
+</body>
+</html>

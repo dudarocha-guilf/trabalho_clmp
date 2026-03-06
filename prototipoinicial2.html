@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Profissional de Peças</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    background:#f1f5f9;
+}
+
+/* TELAS LOGIN E CADASTRO */
+.tela{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.box{
+    background:white;
+    padding:40px;
+    width:350px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.box h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.box input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+.box button{
+    width:100%;
+    padding:10px;
+    background:#2563eb;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.link{
+    text-align:center;
+    margin-top:10px;
+    cursor:pointer;
+    color:#2563eb;
+}
+
+/* SISTEMA */
+#sistema{
+    display:none;
+    padding:30px;
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.logout{
+    background:crimson;
+    padding:8px 15px;
+    border-radius:6px;
+    color:white;
+    cursor:pointer;
+}
+
+.menu-abas{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.aba{
+    padding:10px 20px;
+    border:none;
+    background:#cbd5e1;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.aba.ativa{
+    background:#2563eb;
+    color:white;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+.alerta{
+    color:red;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginTela" class="tela">
+    <div class="box">
+        <h2>Login</h2>
+        <input type="text" id="loginUser" placeholder="Usuário">
+        <input type="password" id="loginPass" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+        <div class="link" onclick="mostrarCadastro()">Criar conta</div>
+    </div>
+</div>
+
+<!-- CADASTRO -->
+<div id="cadastroTela" class="tela" style="display:none">
+    <div class="box">
+        <h2>Cadastrar Usuário</h2>
+        <input type="text" id="cadUser" placeholder="Novo usuário">
+        <input type="password" id="cadPass" placeholder="Nova senha">
+        <button onclick="cadastrar()">Cadastrar</button>
+        <div class="link" onclick="voltarLogin()">Voltar para login</div>
+    </div>
+</div>
+
+<!-- SISTEMA -->
+<div id="sistema">
+
+<header>
+    <h1>📦 Controle de Peças</h1>
+    <div class="logout" onclick="logout()">Sair</div>
+</header>
+
+<div class="menu-abas">
+    <button class="aba ativa" onclick="mostrarAba('dashboard',this)">Dashboard</button>
+    <button class="aba" onclick="mostrarAba('cadastroPeca',this)">Cadastro de Peça</button>
+</div>
+
+<div id="dashboard">
+    <div class="card">
+        <h3>Estoque</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Peça</th>
+                    <th>Estoque</th>
+                    <th>Consumir</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabela"></tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3>📊 Consumo Geral</h3>
+        <canvas id="graficoGeral"></canvas>
+    </div>
+
+    <div class="card">
+        <h3>📈 Consumo por Peça</h3>
+        <canvas id="graficoIndividual"></canvas>
+    </div>
+</div>
+
+<div id="cadastroPeca" style="display:none">
+    <div class="card">
+        <h3>Nova Peça</h3>
+        <input type="text" id="nome" placeholder="Nome da peça">
+        <input type="number" id="quantidade" placeholder="Quantidade inicial">
+        <button onclick="adicionarPeca()">Cadastrar</button>
+    </div>
+</div>
+
+</div>
+
+<script>
+const ESTOQUE_MINIMO = 50;
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let pecas = JSON.parse(localStorage.getItem("pecas")) || [];
+
+function salvar(){
+    localStorage.setItem("usuarios",JSON.stringify(usuarios));
+    localStorage.setItem("pecas",JSON.stringify(pecas));
+}
+
+/* LOGIN E CADASTRO */
+
+function mostrarCadastro(){
+    loginTela.style.display="none";
+    cadastroTela.style.display="flex";
+}
+
+function voltarLogin(){
+    cadastroTela.style.display="none";
+    loginTela.style.display="flex";
+}
+
+function cadastrar(){
+    const user=cadUser.value;
+    const pass=cadPass.value;
+
+    if(!user || !pass){
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    usuarios.push({user,pass});
+    salvar();
+    alert("Usuário cadastrado!");
+    voltarLogin();
+}
+
+function login(){
+    const user=loginUser.value;
+    const pass=loginPass.value;
+
+    const valido=usuarios.find(u=>u.user===user && u.pass===pass);
+
+    if(valido){
+        loginTela.style.display="none";
+        sistema.style.display="block";
+        renderizar();
+    }else{
+        alert("Usuário ou senha inválidos!");
+    }
+}
+
+function logout(){
+    location.reload();
+}
+
+/* ABAS */
+
+function mostrarAba(id,btn){
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("cadastroPeca").style.display="none";
+    document.getElementById(id).style.display="block";
+
+    document.querySelectorAll(".aba").forEach(a=>a.classList.remove("ativa"));
+    btn.classList.add("ativa");
+}
+
+/* PEÇAS */
+
+function adicionarPeca(){
+    const nome=document.getElementById("nome").value;
+    const quantidade=parseInt(document.getElementById("quantidade").value);
+
+    if(!nome || !quantidade) return;
+
+    pecas.push({nome,quantidade,consumo:0});
+    salvar();
+    renderizar();
+}
+
+function consumir(i){
+    let valor=parseInt(prompt("Quantidade para consumir:"));
+    if(!valor || valor<=0) return;
+
+    if(valor>pecas[i].quantidade){
+        alert("Estoque insuficiente!");
+        return;
+    }
+
+    pecas[i].quantidade-=valor;
+    pecas[i].consumo+=valor;
+
+    if(pecas[i].quantidade<=ESTOQUE_MINIMO){
+        alert("⚠ Estoque abaixo de 50 unidades!");
+    }
+
+    salvar();
+    renderizar();
+}
+
+function renderizar(){
+    const tabela=document.getElementById("tabela");
+    tabela.innerHTML="";
+
+    pecas.forEach((p,i)=>{
+        tabela.innerHTML+=`
+        <tr>
+            <td>${p.nome}</td>
+            <td class="${p.quantidade<=50?'alerta':''}">${p.quantidade}</td>
+            <td><button onclick="consumir(${i})">Consumir</button></td>
+            <td><button onclick="pecas.splice(${i},1);salvar();renderizar()">Excluir</button></td>
+        </tr>`;
+    });
+
+    atualizarGraficos();
+}
+
+/* GRÁFICOS */
+
+let grafico1,grafico2;
+
+function atualizarGraficos(){
+    const nomes=pecas.map(p=>p.nome);
+    const consumos=pecas.map(p=>p.consumo);
+
+    if(grafico1) grafico1.destroy();
+    if(grafico2) grafico2.destroy();
+
+    grafico1=new Chart(graficoGeral,{
+        type:'bar',
+        data:{
+            labels:nomes,
+            datasets:[{label:'Consumo Total',data:consumos,backgroundColor:'#2563eb'}]
+        }
+    });
+
+    grafico2=new Chart(graficoIndividual,{
+        type:'pie',
+        data:{
+            labels:nomes,
+            datasets:[{data:consumos}]
+        }
+    });
+}
+</script>
+
+</body>
+</html>

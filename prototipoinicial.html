@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Profissional de Peças</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+body{
+    background:#f1f5f9;
+}
+
+/* TELAS */
+.tela{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.box{
+    background:white;
+    padding:40px;
+    width:350px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.box h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.box input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+.box button{
+    width:100%;
+    padding:10px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.link{
+    text-align:center;
+    margin-top:10px;
+    cursor:pointer;
+    color:#2563eb;
+}
+
+/* SISTEMA */
+#sistema{
+    display:none;
+    padding:30px;
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.logout{
+    background:crimson;
+    color:white;
+    padding:8px 15px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.menu{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.menu button{
+    padding:10px 20px;
+    border:none;
+    background:#cbd5e1;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.menu .ativa{
+    background:#2563eb;
+    color:white;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+.alerta{
+    color:red;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginTela" class="tela">
+    <div class="box">
+        <h2>Login</h2>
+        <input type="text" id="loginUser" placeholder="Usuário">
+        <input type="password" id="loginPass" placeholder="Senha">
+        <button onclick="login()">Entrar</button>
+        <div class="link" onclick="mostrarCadastro()">Criar conta</div>
+    </div>
+</div>
+
+<!-- CADASTRO -->
+<div id="cadastroTela" class="tela" style="display:none">
+    <div class="box">
+        <h2>Criar Conta</h2>
+        <input type="text" id="novoUser" placeholder="Usuário">
+        <input type="password" id="novoPass" placeholder="Senha">
+        <button onclick="cadastrarUsuario()">Cadastrar</button>
+        <div class="link" onclick="voltarLogin()">Voltar ao login</div>
+    </div>
+</div>
+
+<!-- SISTEMA -->
+<div id="sistema">
+
+<header>
+    <h1>📦 Controle Profissional de Peças</h1>
+    <div class="logout" onclick="logout()">Sair</div>
+</header>
+
+<div class="menu">
+    <button class="ativa" onclick="mostrarAba('dashboard',this)">Dashboard</button>
+    <button onclick="mostrarAba('cadastro',this)">Cadastro de Peças</button>
+</div>
+
+<div id="dashboard">
+
+<div class="card">
+<table>
+<thead>
+<tr>
+<th>Peça</th>
+<th>Estoque</th>
+<th>Consumir</th>
+<th>Excluir</th>
+</tr>
+</thead>
+<tbody id="tabela"></tbody>
+</table>
+</div>
+
+<div class="card">
+<canvas id="graficoBarra"></canvas>
+</div>
+
+<div class="card">
+<canvas id="graficoPizza"></canvas>
+</div>
+
+</div>
+
+<div id="cadastro" style="display:none">
+<div class="card">
+<input type="text" id="nomePeca" placeholder="Nome da peça">
+<input type="number" id="qtdPeca" placeholder="Quantidade inicial">
+<button onclick="adicionarPeca()">Adicionar</button>
+</div>
+</div>
+
+</div>
+
+<script>
+const ESTOQUE_MINIMO = 50;
+
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let pecas = JSON.parse(localStorage.getItem("pecas")) || [];
+
+function salvar(){
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    localStorage.setItem("pecas", JSON.stringify(pecas));
+}
+
+function mostrarCadastro(){
+    loginTela.style.display="none";
+    cadastroTela.style.display="flex";
+}
+
+function voltarLogin(){
+    cadastroTela.style.display="none";
+    loginTela.style.display="flex";
+}
+
+function cadastrarUsuario(){
+    let user = novoUser.value;
+    let pass = novoPass.value;
+
+    if(!user || !pass) return alert("Preencha tudo!");
+
+    usuarios.push({user,pass});
+    salvar();
+    alert("Conta criada!");
+    voltarLogin();
+}
+
+function login(){
+    let user = loginUser.value;
+    let pass = loginPass.value;
+
+    let existe = usuarios.find(u=>u.user===user && u.pass===pass);
+
+    if(existe){
+        loginTela.style.display="none";
+        sistema.style.display="block";
+        renderizar();
+    }else{
+        alert("Usuário ou senha incorretos!");
+    }
+}
+
+function logout(){
+    location.reload();
+}
+
+function mostrarAba(id,btn){
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("cadastro").style.display="none";
+    document.getElementById(id).style.display="block";
+
+    document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("ativa"));
+    btn.classList.add("ativa");
+}
+
+function adicionarPeca(){
+    let nome = nomePeca.value;
+    let qtd = parseInt(qtdPeca.value);
+
+    if(!nome || !qtd) return alert("Preencha tudo!");
+
+    pecas.push({nome,quantidade:qtd,consumo:0});
+    salvar();
+    renderizar();
+}
+
+function consumir(i){
+    let valor = parseInt(prompt("Quantidade para consumir:"));
+    if(!valor || valor<=0) return;
+
+    if(valor>pecas[i].quantidade) return alert("Estoque insuficiente!");
+
+    pecas[i].quantidade -= valor;
+    pecas[i].consumo += valor;
+
+    if(pecas[i].quantidade <= ESTOQUE_MINIMO){
+        alert("⚠ Estoque abaixo de 50 unidades!");
+    }
+
+    salvar();
+    renderizar();
+}
+
+function excluir(i){
+    pecas.splice(i,1);
+    salvar();
+    renderizar();
+}
+
+let graficoBarra, graficoPizza;
+
+function renderizar(){
+    let tabela="";
+    pecas.forEach((p,i)=>{
+        tabela+=`
+        <tr>
+        <td>${p.nome}</td>
+        <td class="${p.quantidade<=ESTOQUE_MINIMO?'alerta':''}">
+        ${p.quantidade}
+        </td>
+        <td><button onclick="consumir(${i})">Consumir</button></td>
+        <td><button onclick="excluir(${i})">X</button></td>
+        </tr>`;
+    });
+    document.getElementById("tabela").innerHTML=tabela;
+
+    atualizarGraficos();
+}
+
+function atualizarGraficos(){
+    let nomes = pecas.map(p=>p.nome);
+    let consumos = pecas.map(p=>p.consumo);
+
+    if(graficoBarra) graficoBarra.destroy();
+    if(graficoPizza) graficoPizza.destroy();
+
+    graficoBarra = new Chart(graficoBarra = document.getElementById("graficoBarra"),{
+        type:'bar',
+        data:{
+            labels:nomes,
+            datasets:[{
+                label:'Consumo Total',
+                data:consumos,
+                backgroundColor:'#2563eb'
+            }]
+        }
+    });
+
+    graficoPizza = new Chart(document.getElementById("graficoPizza"),{
+        type:'pie',
+        data:{
+            labels:nomes,
+            datasets:[{
+                data:consumos
+            }]
+        }
+    });
+}
+</script>
+
+</body>
+</html>

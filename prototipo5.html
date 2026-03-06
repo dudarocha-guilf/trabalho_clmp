@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>AlmaFisio - Clínica de Fisioterapia</title>
+
+<style>
+
+body{
+font-family: 'Segoe UI';
+margin:0;
+background:#eef6fb;
+color:#333;
+}
+
+header{
+background:white;
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+header img{
+height:60px;
+}
+
+nav button{
+margin-left:10px;
+padding:10px 18px;
+border:none;
+background:#5ab0d8;
+color:white;
+border-radius:6px;
+cursor:pointer;
+font-weight:500;
+}
+
+nav button:hover{
+background:#3c9ac6;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:40px;
+}
+
+.hidden{
+display:none;
+}
+
+h2{
+margin-bottom:20px;
+color:#2b6f92;
+}
+
+/* FORM */
+
+form{
+background:white;
+padding:30px;
+border-radius:12px;
+max-width:420px;
+margin:auto;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px 20px;
+border:none;
+background:#5ab0d8;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+/* SERVIÇOS */
+
+.servicos{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+transition:0.2s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card h3{
+color:#2b6f92;
+}
+
+.preco{
+font-size:18px;
+font-weight:bold;
+margin-top:10px;
+}
+
+/* TABELA */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+border-radius:10px;
+overflow:hidden;
+}
+
+th{
+background:#5ab0d8;
+color:white;
+padding:12px;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+.status{
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<img src="AlmaFisio.png">
+
+<nav>
+<button onclick="mostrar('servicos')">Serviços</button>
+<button onclick="mostrar('agendar')">Agendar</button>
+<button onclick="mostrar('meus')">Meus Agendamentos</button>
+<button onclick="mostrar('admin')">Admin</button>
+</nav>
+
+</header>
+
+<div class="container">
+
+<!-- LOGIN -->
+
+<div id="login">
+
+<form onsubmit="login(event)">
+
+<h2>Login</h2>
+
+<input id="email" placeholder="Email" required>
+<input id="senha" type="password" placeholder="Senha" required>
+
+<button>Entrar</button>
+
+<p onclick="mostrar('cadastro')" style="cursor:pointer;color:#5ab0d8">
+Criar conta
+</p>
+
+</form>
+
+</div>
+
+<!-- CADASTRO -->
+
+<div id="cadastro" class="hidden">
+
+<form onsubmit="cadastrar(event)">
+
+<h2>Criar Conta</h2>
+
+<input id="nomeCadastro" placeholder="Nome" required>
+<input id="emailCadastro" placeholder="Email" required>
+<input id="senhaCadastro" type="password" placeholder="Senha" required>
+
+<button>Cadastrar</button>
+
+</form>
+
+</div>
+
+<!-- SERVIÇOS -->
+
+<div id="servicos" class="hidden">
+
+<h2>Serviços da Clínica</h2>
+
+<div class="servicos">
+
+<div class="card">
+<h3>Fisioterapia</h3>
+<p>Tratamento de dores musculares e articulares.</p>
+<p>Duração: 60 minutos</p>
+<p class="preco">R$120</p>
+</div>
+
+<div class="card">
+<h3>Massagem Terapêutica</h3>
+<p>Relaxamento e recuperação muscular.</p>
+<p>Duração: 45 minutos</p>
+<p class="preco">R$90</p>
+</div>
+
+<div class="card">
+<h3>Reabilitação Esportiva</h3>
+<p>Recuperação de lesões esportivas.</p>
+<p>Duração: 60 minutos</p>
+<p class="preco">R$150</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- AGENDAR -->
+
+<div id="agendar" class="hidden">
+
+<h2>Agendar Consulta</h2>
+
+<form onsubmit="agendar(event)">
+
+<select id="servico">
+<option>Fisioterapia</option>
+<option>Massagem Terapêutica</option>
+<option>Reabilitação Esportiva</option>
+</select>
+
+<input type="date" id="data" required>
+
+<select id="hora">
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>14:00</option>
+<option>15:00</option>
+</select>
+
+<button>Agendar</button>
+
+</form>
+
+</div>
+
+<!-- MEUS AGENDAMENTOS -->
+
+<div id="meus" class="hidden">
+
+<h2>Meus Agendamentos</h2>
+
+<table id="tabelaUser">
+
+<tr>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>
+
+</table>
+
+</div>
+
+<!-- ADMIN -->
+
+<div id="admin" class="hidden">
+
+<h2>Painel Administrativo</h2>
+
+<input type="date" onchange="filtrar(this.value)">
+
+<table id="tabelaAdmin">
+
+<tr>
+<th>Cliente</th>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
+let agendamentos=JSON.parse(localStorage.getItem("agendamentos"))||[]
+let usuarioLogado=null
+
+function mostrar(tela){
+
+["login","cadastro","servicos","agendar","meus","admin"].forEach(id=>{
+document.getElementById(id).classList.add("hidden")
+})
+
+document.getElementById(tela).classList.remove("hidden")
+
+if(tela=="meus") carregarUser()
+
+if(tela=="admin") carregarAdmin()
+
+}
+
+function cadastrar(e){
+
+e.preventDefault()
+
+let nome=document.getElementById("nomeCadastro").value
+let email=document.getElementById("emailCadastro").value
+let senha=document.getElementById("senhaCadastro").value
+
+usuarios.push({nome,email,senha})
+
+localStorage.setItem("usuarios",JSON.stringify(usuarios))
+
+alert("Conta criada!")
+
+mostrar("login")
+
+}
+
+function login(e){
+
+e.preventDefault()
+
+let email=document.getElementById("email").value
+let senha=document.getElementById("senha").value
+
+let user=usuarios.find(u=>u.email==email && u.senha==senha)
+
+if(user){
+
+usuarioLogado=user
+
+alert("Login realizado!")
+
+mostrar("servicos")
+
+}else{
+
+alert("Usuário não encontrado")
+
+}
+
+}
+
+function agendar(e){
+
+e.preventDefault()
+
+let servico=document.getElementById("servico").value
+let data=document.getElementById("data").value
+let hora=document.getElementById("hora").value
+
+let ocupado=agendamentos.find(a=>a.data==data && a.hora==hora)
+
+if(ocupado){
+
+alert("Horário indisponível")
+
+return
+
+}
+
+agendamentos.push({
+cliente:usuarioLogado.nome,
+servico,
+data,
+hora,
+status:"Pendente"
+})
+
+localStorage.setItem("agendamentos",JSON.stringify(agendamentos))
+
+alert("Agendamento realizado!")
+
+}
+
+function carregarUser(){
+
+let tabela=document.getElementById("tabelaUser")
+
+tabela.innerHTML=`<tr>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>`
+
+agendamentos
+.filter(a=>a.cliente==usuarioLogado.nome)
+.forEach((a,i)=>{
+
+tabela.innerHTML+=`
+<tr>
+<td>${a.servico}</td>
+<td>${a.data}</td>
+<td>${a.hora}</td>
+<td class="status">${a.status}</td>
+<td><button onclick="cancelar(${i})">Cancelar</button></td>
+</tr>
+`
+
+})
+
+}
+
+function cancelar(i){
+
+agendamentos.splice(i,1)
+
+localStorage.setItem("agendamentos",JSON.stringify(agendamentos))
+
+carregarUser()
+
+}
+
+function carregarAdmin(){
+
+let tabela=document.getElementById("tabelaAdmin")
+
+tabela.innerHTML=`<tr>
+<th>Cliente</th>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+</tr>`
+
+agendamentos.forEach(a=>{
+
+tabela.innerHTML+=`
+<tr>
+<td>${a.cliente}</td>
+<td>${a.servico}</td>
+<td>${a.data}</td>
+<td>${a.hora}</td>
+<td>${a.status}</td>
+</tr>
+`
+
+})
+
+}
+
+function filtrar(data){
+
+let tabela=document.getElementById("tabelaAdmin")
+
+let lista=agendamentos.filter(a=>a.data==data)
+
+tabela.innerHTML=`<tr>
+<th>Cliente</th>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+</tr>`
+
+lista.forEach(a=>{
+
+tabela.innerHTML+=`
+<tr>
+<td>${a.cliente}</td>
+<td>${a.servico}</td>
+<td>${a.data}</td>
+<td>${a.hora}</td>
+<td>${a.status}</td>
+</tr>
+`
+
+})
+
+}
+
+</script>
+
+</body>
+</html>

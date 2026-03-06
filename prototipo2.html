@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>AlmaFisio</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Segoe UI;
+margin:0;
+background:#eef6fb;
+}
+
+header{
+background:white;
+padding:15px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+header img{
+height:60px;
+}
+
+nav button{
+margin-left:10px;
+padding:10px 18px;
+border:none;
+background:#5ab0d8;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:40px;
+}
+
+.hidden{
+display:none;
+}
+
+h2{
+color:#2b6f92;
+}
+
+/* FORM */
+
+form{
+background:white;
+padding:30px;
+border-radius:12px;
+max-width:400px;
+margin:auto;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px 18px;
+border:none;
+background:#5ab0d8;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+/* SERVIÇOS */
+
+.servicos{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* TABELA */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th{
+background:#5ab0d8;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+text-align:center;
+border-bottom:1px solid #eee;
+}
+
+.dashboard{
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<img src="AlmaFisio.png">
+
+<nav>
+
+<button onclick="mostrar('servicos')">Serviços</button>
+<button onclick="mostrar('agendar')">Agendar</button>
+<button onclick="mostrar('meus')">Meus</button>
+<button onclick="mostrar('admin')">Admin</button>
+<button onclick="mostrar('dashboard')">Dashboard</button>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<!-- LOGIN -->
+
+<div id="login">
+
+<form onsubmit="login(event)">
+
+<h2>Login</h2>
+
+<input id="email" placeholder="Email" required>
+<input id="senha" type="password" placeholder="Senha" required>
+
+<button>Entrar</button>
+
+<p onclick="mostrar('cadastro')" style="cursor:pointer;color:#5ab0d8">
+Criar conta
+</p>
+
+</form>
+
+</div>
+
+<!-- CADASTRO -->
+
+<div id="cadastro" class="hidden">
+
+<form onsubmit="cadastrar(event)">
+
+<h2>Criar Conta</h2>
+
+<input id="nomeCadastro" placeholder="Nome" required>
+<input id="emailCadastro" placeholder="Email" required>
+<input id="senhaCadastro" type="password" placeholder="Senha" required>
+
+<button>Cadastrar</button>
+
+</form>
+
+</div>
+
+<!-- SERVIÇOS -->
+
+<div id="servicos" class="hidden">
+
+<h2>Serviços</h2>
+
+<div class="servicos">
+
+<div class="card">
+<h3>Fisioterapia</h3>
+<p>Duração: 60 min</p>
+<p>R$120</p>
+</div>
+
+<div class="card">
+<h3>Massagem Terapêutica</h3>
+<p>Duração: 45 min</p>
+<p>R$90</p>
+</div>
+
+<div class="card">
+<h3>Reabilitação Esportiva</h3>
+<p>Duração: 60 min</p>
+<p>R$150</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- AGENDAR -->
+
+<div id="agendar" class="hidden">
+
+<h2>Agendar</h2>
+
+<form onsubmit="agendar(event)">
+
+<select id="servico">
+<option>Fisioterapia</option>
+<option>Massagem Terapêutica</option>
+<option>Reabilitação Esportiva</option>
+</select>
+
+<input type="date" id="data" required>
+
+<select id="hora">
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>14:00</option>
+<option>15:00</option>
+</select>
+
+<button>Agendar</button>
+
+</form>
+
+</div>
+
+<!-- MEUS -->
+
+<div id="meus" class="hidden">
+
+<h2>Meus Agendamentos</h2>
+
+<table id="tabelaUser">
+
+<tr>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>
+
+</table>
+
+</div>
+
+<!-- ADMIN -->
+
+<div id="admin" class="hidden">
+
+<h2>Painel Administrativo</h2>
+
+<table id="tabelaAdmin">
+
+<tr>
+<th>Cliente</th>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+</tr>
+
+</table>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="hidden">
+
+<h2>Dashboard de Agendamentos</h2>
+
+<div class="dashboard">
+
+<canvas id="grafico"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
+let agendamentos=JSON.parse(localStorage.getItem("agendamentos"))||[]
+let usuarioLogado=null
+
+function mostrar(tela){
+
+["login","cadastro","servicos","agendar","meus","admin","dashboard"]
+.forEach(id=>document.getElementById(id).classList.add("hidden"))
+
+document.getElementById(tela).classList.remove("hidden")
+
+if(tela=="meus") carregarUser()
+if(tela=="admin") carregarAdmin()
+if(tela=="dashboard") gerarGrafico()
+
+}
+
+function cadastrar(e){
+
+e.preventDefault()
+
+let nome=nomeCadastro.value
+let email=emailCadastro.value
+let senha=senhaCadastro.value
+
+usuarios.push({nome,email,senha})
+
+localStorage.setItem("usuarios",JSON.stringify(usuarios))
+
+alert("Conta criada!")
+
+mostrar("login")
+
+}
+
+function login(e){
+
+e.preventDefault()
+
+let email=document.getElementById("email").value
+let senha=document.getElementById("senha").value
+
+let user=usuarios.find(u=>u.email==email && u.senha==senha)
+
+if(user){
+
+usuarioLogado=user
+
+mostrar("servicos")
+
+}else{
+
+alert("Usuário não encontrado")
+
+}
+
+}
+
+function agendar(e){
+
+e.preventDefault()
+
+let servico=servico.value
+let data=document.getElementById("data").value
+let hora=document.getElementById("hora").value
+
+let ocupado=agendamentos.find(a=>a.data==data && a.hora==hora)
+
+if(ocupado){
+
+alert("Horário ocupado")
+
+return
+
+}
+
+agendamentos.push({
+cliente:usuarioLogado.nome,
+servico,
+data,
+hora,
+status:"Pendente"
+})
+
+localStorage.setItem("agendamentos",JSON.stringify(agendamentos))
+
+alert("Agendamento realizado!")
+
+}
+
+function carregarUser(){
+
+let tabela=document.getElementById("tabelaUser")
+
+tabela.innerHTML=`<tr>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>`
+
+agendamentos
+.filter(a=>a.cliente==usuarioLogado.nome)
+.forEach((a,i)=>{
+
+tabela.innerHTML+=`
+<tr>
+<td>${a.servico}</td>
+<td>${a.data}</td>
+<td>${a.hora}</td>
+<td>${a.status}</td>
+<td><button onclick="cancelar(${i})">Cancelar</button></td>
+</tr>
+`
+
+})
+
+}
+
+function cancelar(i){
+
+agendamentos.splice(i,1)
+
+localStorage.setItem("agendamentos",JSON.stringify(agendamentos))
+
+carregarUser()
+
+}
+
+function carregarAdmin(){
+
+let tabela=document.getElementById("tabelaAdmin")
+
+tabela.innerHTML=`<tr>
+<th>Cliente</th>
+<th>Serviço</th>
+<th>Data</th>
+<th>Hora</th>
+<th>Status</th>
+</tr>`
+
+agendamentos.forEach(a=>{
+
+tabela.innerHTML+=`
+<tr>
+<td>${a.cliente}</td>
+<td>${a.servico}</td>
+<td>${a.data}</td>
+<td>${a.hora}</td>
+<td>${a.status}</td>
+</tr>
+`
+
+})
+
+}
+
+function gerarGrafico(){
+
+let contagem={
+Fisioterapia:0,
+"Massagem Terapêutica":0,
+"Reabilitação Esportiva":0
+}
+
+agendamentos.forEach(a=>{
+contagem[a.servico]++
+})
+
+new Chart(
+document.getElementById("grafico"),
+{
+type:"bar",
+data:{
+labels:Object.keys(contagem),
+datasets:[{
+label:"Agendamentos",
+data:Object.values(contagem)
+}]
+}
+}
+)
+
+}
+
+</script>
+
+</body>
+</html>
