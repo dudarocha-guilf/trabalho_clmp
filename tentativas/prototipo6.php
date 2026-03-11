@@ -58,6 +58,11 @@ $isAdmin = ($_SESSION['usuario'] === 'admin');
             line-height: 1.6;
         }
 
+        h4{
+            color: #64748b;
+            font-weight: normal;  
+        }
+
         /* Header Minimalista */
         nav { 
             background: var(--white); 
@@ -196,13 +201,20 @@ $isAdmin = ($_SESSION['usuario'] === 'admin');
                     <h3><?php echo $s['nome']; ?></h3>
                     <p style="color: var(--text-light); font-size: 0.9rem;">Sessões personalizadas de 50 minutos.</p>
                     <p><strong><?php echo $s['preco']; ?></strong></p>
-                    <button class="outline" onclick="abrirAgendamento('<?php echo $s['nome']; ?>')">Reservar Horário</button>
+                    <button class="outline" onclick="abrirAgendamento('<?php echo $s['nome']; ?>')">Mais informações</button>
                 </div>
             <?php endforeach; ?>
         </div>
 
         <div id="areaReserva" class="card" style="display:none; margin-top: 3rem; border-top: 4px solid var(--primary);">
-            <h3>Agendar: <span id="txtServico" style="color:var(--primary)"></span></h3>
+            <h3><span id="txtServico" style="color:var(--primary)"></span></h3>
+            <h4 id="txtDescricaoServico">  Reabilitação esportiva é o processo de tratamento e recuperação de lesões causadas pela
+                prática de esportes ou atividades físicas. Por meio de exercícios específicos, técnicas
+                de fisioterapia e acompanhamento profissional, o objetivo é reduzir a dor, recuperar movimentos, fortalecer 
+                músculos e permitir que o atleta volte às atividades com segurança e melhor desempenho. 💪🏽🏃‍♂️</h4>
+
+                 <h3 style="color:var(--primary)">Realize o seu agendamento</h3>
+
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div>
                     <label>Escolha a Data</label>
@@ -284,6 +296,7 @@ $isAdmin = ($_SESSION['usuario'] === 'admin');
 <script>
     function abrirAgendamento(nome) {
         document.getElementById('areaReserva').style.display = 'block';
+        document.getElementById('txtServico').innerText = nome;
         document.getElementById('txtServico').innerText = nome;
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
