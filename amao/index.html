@@ -1,20 +1,83 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlmaFisio - Fisioterapia Esportiva</title>
-    
+    <title>home</title>
     <link rel="stylesheet" href="style.css">
-    <script rel="script.js"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="menu">
-        <img src="imagens/AlmaFisio.png">
 
-        <a href="index.html">Serviços</a>
-        <a href="">Minha Agenda</a>
-        <a href="decisao.php">Sair</a>
+<body>
+    <nav class="navbar">
+        <h2 class="logo">
+            <span class="alma">Alma</span><span class="fisio">Fisio</span>
+        </h2>
+
+        <!-- MENU -->
+
+        <ul class="nav-links">
+            <li><a href="#">Início</a></li>
+            <li class="active"><a href="#">Serviços</a></li>
+            <li><a href="#">Agendamentos</a></li>
+            <li><a href="#">Exercícios</a></li>
+
+        </ul>
+
+        <!-- FOTO USUÀRIO -->
+
+        <div class="profile">
+            <a href="perfil.php">
+                <img src="/amao/imagens/user2.png" alt="foto do usuário">
+                <!-- <span>Perfil</span> -->
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- NOSSOS TRATAMENTOS -->
+
+    <div class="centro">
+        <h1>Nosso Tratamentos</h1>
+        <h4>Fisioterapia de elite para atletas e entusiastas.</h4>
     </div>
+
+    <!-- CONTAINER DAS DIV -->
+
+    <div class="container-central">
+        <div class="tratamentos" id="reabilitacao">
+            <h3>Reabilitação Esportiva</h3>
+            <h4>Sessões personalizadas de 50 minutos.</h4>
+            <h3>R$ 180</h3>
+            <button>Mais Informações</button>
+        </div>
+
+
+
+        <div class="tratamentos" id="recovery">
+            <h3>Recovery Pós-Treino</h3>
+            <h4>Sessões personalizadas de 50 minutos.</h4>
+            <h3>R$ 120</h3>
+            <button>Mais Informações</button>
+        </div>
+
+        <div class="tratamentos" id="osteopatia">
+            <h3>Osteopatia</h3>
+            <h4>Sessões personalizadas de 50 minutos.</h4>
+            <h3>R$ 220</h3>
+            <button>Mais Informações</button>
+        </div>
+
+        <div class="tratamentos" id="prevencao">
+            <h3>Prevenção de Lesão</h3>
+            <h4>Sessões personalizadas de 50 minutos.</h4>
+            <h3>R$ 150</h3>
+            <button>Mais Informações</button>
+        </div>
+
+    </div>
+
 </body>
+
 </html>

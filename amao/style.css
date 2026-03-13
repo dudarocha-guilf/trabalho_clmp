@@ -1,8 +1,148 @@
-img{
- width: 100px;
+body {
+    margin: 0;
+    background: radial-gradient(circle at top left,
+            rgba(255, 255, 255, 0.7) 0%,
+            transparent 40%),
+        linear-gradient(135deg,
+            #b9d9ff 0%,
+            #cce3ff 50%,
+            #a1cdff 100%);
+    background-attachment: fixed;
 }
 
-menu{
-    width: 100%;
-    height: 70px;
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f4f9ff;
+    padding: 10px 40px;
+}
+
+/* logo */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.alma {
+    color: #72cbff;
+}
+
+.fisio {
+    color: #42678d;
+}
+
+/* menu */
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+}
+
+.menu li a:hover {
+    color: #1d4ed8;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 35px;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 17px;
+    color: #4c5d80;
+    transition: 0.3s;
+}
+
+.nav-links li.active a,
+.nav-links a:hover {
+    color: #2b59ff;
+    /* azul igual ao botão */
+}
+
+.nav-links li.active::after {
+    content: "";
+    width: 55%;
+    height: 3px;
+    background: #2b59ff;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -6px;
+    border-radius: 10px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+}
+
+.profile span {
+    font-size: 16px;
+    color: #2b3f63;
+}
+
+.centro {
+    text-align: center;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.container-central {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    gap: 20px;
+    text-align: center;
+}
+
+.tratamentos {
+    background-color: white;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+h4{
+    color: grey;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: none;
+}
+
+h1{
+    color: #4c5d80;
+}
+
+h5{
+    color: #2b3f63;
+}
+
+button{
+    background-color: white;
+    color: blue;
+    border-radius: 20px;
+    border-color: blue;
+    padding: 15px;
+    width: 175px;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
 }
